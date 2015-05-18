@@ -57,11 +57,28 @@
             // code for IE6, IE5
             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
           }
-
+          var that = this;
           xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
               if(xmlhttp.status == 200){
-                document.getElementById("weather-display").innerHTML = xmlhttp.responseText;
+                var responseData = JSON.parse(xmlhttp.responseText);
+                var weatherData = responseData.weather[0];
+                var temp;
+                console.log("response");
+                console.log(responseData);
+                console.log("weatherData");
+                console.log(weatherData);
+
+                temp = (responseData.main.temp - 273.15) * 1.8 + 32;
+
+                var string = "The weather in " +  responseData.name + " is ";
+
+                string += weatherData.main;
+
+                string += "<br> The current temperature is ";
+                string += temp + " degrees Farenheit";
+
+                document.getElementById("weather-display").innerHTML = string;
               }
               else if(xmlhttp.status == 400) {
                 alert('There was an error 400')
