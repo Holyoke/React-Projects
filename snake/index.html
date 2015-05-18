@@ -1,0 +1,58 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <script src="https://fb.me/react-0.13.3.js"></script>
+    <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+  </head>
+
+  <style>
+  .tile {
+    background-color: blue;
+    height: 50px;
+    width: 50px;
+  }
+  </style>
+  <body>
+    <h1>React Snake</h1>
+    <div id="board">
+    </div>
+
+    <script type="text/jsx">
+      var Board = React.createClass({
+        getInitialState: function () {
+          var grid = [];
+          for(var i = 0; i < 10; i++){
+            var row = []
+            for(var j=0; j < 10; j++){
+              row.push([i,j]);
+            }
+            grid.push(row);
+          }
+
+          return { board: grid};
+        },
+
+        render: function () {
+          debugger
+          return (
+            <div>
+              {
+                this.state.board.forEach(function(row){
+                  console.log(row);
+                  row.map(function(el, idx){
+                    console.log(idx);
+                    return <div></div>
+                  })
+                })
+              }
+
+            </div>
+          )
+        }
+      })
+
+      React.render(<Board/>, document.getElementById("board"))
+    </script>
+
+  </body>
+</html>
