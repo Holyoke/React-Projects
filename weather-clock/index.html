@@ -6,6 +6,7 @@
   </head>
   <body>
     <h1>Weather Clock</h1>
+    <div id="regular-clock"></div>
     <div id="weather-clock"></div>
 
     <script type="text/jsx">
@@ -29,7 +30,66 @@
           }
       })
 
-      React.render(<Clock/>, document.getElementById('weather-clock'))
+      var Weather = React.createClass({
+        getInitialState: function (){
+          return {lat: "", lon: ""};
+        },
+
+        componentDidMount: function(){
+          var that = this;
+          navigator.geolocation.getCurrentPosition(
+            function(resp) {
+              that.setState({lat: resp.coords.latitude,
+                             lon:resp.coords.longitude});
+              that.loadXMLDOC();
+              }
+          )
+        },
+
+        loadXMLDOC: function() {
+          console.log("did this work?");
+          var xmlhttp;
+
+          if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+          } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+          }
+
+          xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
+              if(xmlhttp.status == 200){
+                document.getElementById("weather-display").innerHTML = xmlhttp.responseText;
+              }
+              else if(xmlhttp.status == 400) {
+                alert('There was an error 400')
+              }
+              else {
+                alert('something else other than 200 was returned')
+              }
+            }
+          }
+
+          var url = "http://api.openweathermap.org/data/2.5/weather?lat=";
+
+          url += this.state.lat + "&" + "lon=" + this.state.lon;
+
+          console.log(url);
+          xmlhttp.open("GET", url, true);
+          xmlhttp.send();
+        },
+        render: function (){
+          return(
+            <div id="weather-display">
+            </div>
+          )
+        },
+      })
+
+      React.render(<Clock/>, document.getElementById('regular-clock'));
+      React.render(<Weather/>, document.getElementById('weather-clock'));
 
     </script>
 
