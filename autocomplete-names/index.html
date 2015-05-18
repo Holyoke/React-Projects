@@ -1,0 +1,54 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <script src="https://fb.me/react-0.13.3.js"></script>
+    <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+  </head>
+  <body>
+    <h1>Auto Complete for Names</h1>
+    <div id="names-list"></div>
+
+    <script type="text/jsx">
+      var List =  React.createClass({
+
+        getInitialState: function(){
+          return { input: '' }
+        },
+
+        handleChange: function(e){
+          this.setState({input: e.target.value})
+        },
+
+        render: function (){
+          var items = this.props.fruits,
+            searchString = this.state.input.trim().toLowerCase();
+
+          if(searchString.length > 0){
+            items = items.filter(function(item){
+              return item.toLowerCase().match ( searchString );
+            })
+          }
+
+          return (
+            <div>
+              <input type="text" value={this.state.input}
+                  onChange={this.handleChange}
+                  placeholder="Enter Text"/>
+              <ul>
+                {items.map(function(l){
+                  return <li> {l} </li>
+                })}
+              </ul>
+            </div>
+          )
+        }
+      })
+
+      var fruits = ['apples', 'bananas', 'cherrys', 'grapes', 'blueberries',
+      'tomatoes', 'peaches', 'plums', 'raspberries', 'oranges']
+
+      React.render(<List fruits={ fruits }/>, document.getElementById('names-list'))
+    </script>
+
+  </body>
+</html>
