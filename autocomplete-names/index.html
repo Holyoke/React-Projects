@@ -19,16 +19,16 @@
           this.setState({input: e.target.value})
         },
 
-        autoCompleteInput: function(){
-          return this.state.input
+        autoCompleteInput: function(e){
+          this.setState({input: e.target.innerHTML})
         },
+
         render: function (){
           var items = this.props.fruits,
             searchString = this.state.input.trim().toLowerCase();
 
           if(searchString.length > 0){
             items = items.filter(function(item){
-
               if (item.substring(0, searchString.length ) === searchString){
                 return item;
               }
@@ -36,15 +36,20 @@
             })
           }
 
+          var autoComplete = this.autoCompleteInput;
           return (
             <div>
               <input type="text" value={this.state.input}
                   onChange={this.handleChange}
                   placeholder="Enter Text"/>
               <ul>
-                {items.map(function(l){
-                  return <li> {l} </li>
-                })}
+                {
+                  items.map(function(l){
+                    //what is THIS in here, it's the window
+                    //so this.autoCompleteInput is undefined
+                    return <li onClick={ autoComplete } > {l} </li>
+                  })
+                }
               </ul>
             </div>
           )
