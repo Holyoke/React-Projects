@@ -19,13 +19,20 @@
           this.setState({input: e.target.value})
         },
 
+        autoCompleteInput: function(){
+          return this.state.input
+        },
         render: function (){
           var items = this.props.fruits,
             searchString = this.state.input.trim().toLowerCase();
 
           if(searchString.length > 0){
             items = items.filter(function(item){
-              return item.toLowerCase().match ( searchString );
+
+              if (item.substring(0, searchString.length ) === searchString){
+                return item;
+              }
+
             })
           }
 
@@ -44,7 +51,7 @@
         }
       })
 
-      var fruits = ['apples', 'bananas', 'cherrys', 'grapes', 'blueberries',
+      var fruits = ['apples', 'bananas', 'cherries', 'grapes', 'blueberries',
       'tomatoes', 'peaches', 'plums', 'raspberries', 'oranges']
 
       React.render(<List fruits={ fruits }/>, document.getElementById('names-list'))
