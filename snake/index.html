@@ -30,14 +30,26 @@
     <script type="text/jsx">
       var SnakeGame = React.createClass({
         getInitialState: function(){
-          return {direction: "N", segments: [[9,3], [9,4], [9,5], [8,5], [7,5]]};
+          return {direction: "N", segments: [[9,3]]};
         },
         _tick: function(){
           var offset;
           switch(this.state.direction){
-            case("N"):
             //advance all segments...
+            case("N"):
               offset = [-1, 0];
+            break;
+
+            case("S"):
+              offset = [1, 0];
+            break;
+
+            case("E"):
+              offset = [0, 1];
+            break;
+
+            case("W"):
+              offset = [0, -1];
             break;
           }
 
