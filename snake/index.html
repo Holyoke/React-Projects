@@ -1,15 +1,25 @@
 <!DOCTYPE>
 <html>
   <head>
-    <script src="https://fb.me/react-0.13.3.js"></script>
-    <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+    <script src="react-0.13.3.js"></script>
+    <script src="JSXTransformer-0.13.3.js"></script>
   </head>
 
   <style>
+  #board{
+    width: 500px;
+    height: 500px;
+  }
   .tile {
     background-color: blue;
-    height: 50px;
-    width: 50px;
+    height: 48px;
+    width: 48px;
+    display: inline-block;
+    border: 1px solid red;
+    color: white;
+  }
+  .snake {
+    background-color: green;
   }
   </style>
   <body>
@@ -18,40 +28,66 @@
     </div>
 
     <script type="text/jsx">
+      var SnakeGame = React.createClass({
+        getInitialState: function(){
+          return {direction: "N", segments: [[9,3], [9,4], [9,5], [8,5], [7,5]]};
+        },
+        _tick: function(){
+          var offset;
+          switch(this.state.direction){
+            case("N"):
+            //advance all segments...
+              offset = [-1, 0];
+            break;
+          }
+
+          var segments = this.state.segments;
+          var oldHead = this.state.segments[0];
+          var newHead = [oldHead[0] + offset[0], oldHead[1] + offset[1]];
+          segments.unshift(newHead);
+          this.setState({segments: segments.slice(0, segments.length - 1)});
+        },
+        componentDidMount: function(){
+          setInterval(this._tick, 500);
+        },
+        render: function(){
+          return (<Board segments={this.state.segments} direction={this.state.direction}/>)
+        }
+      });
+
       var Board = React.createClass({
-        getInitialState: function () {
+        createGrid: function () {
           var grid = [];
           for(var i = 0; i < 10; i++){
             var row = []
             for(var j=0; j < 10; j++){
-              row.push([i,j]);
+              row.push({row: i, col: j, snake: false});
             }
             grid.push(row);
           }
-
-          return { board: grid};
+          this.props.segments.forEach(function(segment){
+            grid[segment[0]][segment[1]].snake = true;
+          })
+          return grid;
         },
-
         render: function () {
-          debugger
+          var grid = this.createGrid();
           return (
             <div>
               {
-                this.state.board.forEach(function(row){
-                  console.log(row);
-                  row.map(function(el, idx){
-                    console.log(idx);
-                    return <div></div>
+                grid.map(function(row){
+                  return row.map(function(tile){
+                    return <div className={tile.snake ? "snake tile" : "tile"}>{tile.snake}</div>;
                   })
                 })
               }
-
             </div>
           )
         }
       })
 
-      React.render(<Board/>, document.getElementById("board"))
+      React.render(<SnakeGame/>, document.getElementById("board"))
+
     </script>
 
   </body>
